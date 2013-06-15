@@ -2,6 +2,13 @@
 #import <QuartzCore/QuartzCore.h>
 #import <AppKit/AppKit.h>
 
+void PrintLn(NSString *format, ...) {
+    va_list arguments;
+    va_start(arguments, format);
+    NSString* s0 = [[NSString alloc] initWithFormat:format arguments:arguments];
+    va_end(arguments);
+    printf("%s\n", [s0 UTF8String]);
+}
 
 BOOL CheckIfDirecoryExists(NSFileManager *fm, NSString *dirPath) {
     BOOL dirIsDirectory = NO;
@@ -20,7 +27,7 @@ NSRect MultiplyRectBySizePercentage(NSRect rect, NSSize size) {
     newRect.size.height = rect.size.height * (1 + size.height);
     newRect.origin.y -= (newRect.size.height - rect.size.height)/2;
 
-    // NSLog(@"%@ –> %@", NSStringFromRect(rect), NSStringFromRect(newRect));
+    // PrintLn(@"%@ –> %@", NSStringFromRect(rect), NSStringFromRect(newRect));
 
     return newRect;
 }
@@ -63,32 +70,32 @@ int main(int argc, char **argv) {
     NSProcessInfo *pi = [NSProcessInfo processInfo];
 
     if (pi.arguments.count < 2) {
-        NSLog(@"ERROR: please pass input and output directory ");
+        PrintLn(@"ERROR: please pass input and output directory ");
         exit(1);
     }
 
     NSString *inputDirPath = [pi.arguments[1] stringByStandardizingPath];
     NSString *outputDirPath = [pi.arguments[2] stringByStandardizingPath];
-    NSLog(@"processing: %@ -> %@", inputDirPath, outputDirPath);
+    PrintLn(@"processing: %@ -> %@", inputDirPath, outputDirPath);
 
     NSSize faceRectMultiplicator = NSMakeSize(0.8, 0.8);
     NSSize faceImageSize = NSMakeSize(120, 120);
 
     NSFileManager *fm = [NSFileManager defaultManager];
     if (!CheckIfDirecoryExists(fm, inputDirPath)) {
-        NSLog(@"ERROR: \"%@\" doesn't exists or not a directory", inputDirPath);
+        PrintLn(@"ERROR: \"%@\" doesn't exists or not a directory", inputDirPath);
     }
 
     NSError *outputDirCheckError = nil;
     BOOL outputDirPresent = [fm createDirectoryAtPath:outputDirPath withIntermediateDirectories:YES attributes:nil error:&outputDirCheckError];
     if (!outputDirPresent || outputDirCheckError) {
-        NSLog(@"ERROR: failed to create output directory: %@", outputDirCheckError);
+        PrintLn(@"ERROR: failed to create output directory: %@", outputDirCheckError);
     }
 
     NSError *inputEnumError = nil;
     NSArray *inputItems = [fm contentsOfDirectoryAtPath:inputDirPath error:&inputEnumError];
     if (inputEnumError) {
-        NSLog(@"ERROR: cannot get contents of input dir: %@", inputEnumError);
+        PrintLn(@"ERROR: cannot get contents of input dir: %@", inputEnumError);
         exit(1);
     }
 
@@ -101,13 +108,13 @@ int main(int argc, char **argv) {
         NSURL *inputFileURL = [NSURL fileURLWithPath:inputFilePath isDirectory:NO];
         CIImage *inputImage = [CIImage imageWithContentsOfURL:inputFileURL];
         if (!inputImage) { 
-            NSLog(@"%@: cannot read image", obj);
+            PrintLn(@"%lu. %@: cannot read image", (idx+1), obj);
             return; 
         }
-        // NSLog(@"inputImage: %@", inputImage);
+        // PrintLn(@"inputImage: %@", inputImage);
         
         NSArray *detectedFeatures = [faceDetector featuresInImage:inputImage];
-        NSLog(@"%@: faces detected: %lu", obj, detectedFeatures.count);
+        PrintLn(@"%lu. %@: faces detected: %lu", (idx+1), obj, detectedFeatures.count);
         [detectedFeatures enumerateObjectsUsingBlock:^(id detectedFeature, NSUInteger idx, BOOL *stop){
             if (![detectedFeature isKindOfClass:[CIFaceFeature class]]) { return; }
 
@@ -129,7 +136,7 @@ int main(int argc, char **argv) {
             NSError *saveError = nil;
             BOOL saved = [croppedInputImageData writeToFile:outFilePath options:NSDataWritingAtomic error:&saveError];
             if (!saved || saveError) {
-                NSLog(@"%@: failed to save face image: %@", obj, saveError);
+                PrintLn(@"%@: failed to save face image: %@", obj, saveError);
             }
 
             [pool drain];
