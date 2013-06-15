@@ -104,6 +104,13 @@ int main(int argc, char **argv) {
 
     [inputItems enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop){
         NSString *inputFilePath = [inputDirPath stringByAppendingPathComponent:obj];
+        
+        BOOL inputFileIsDirectory = NO;
+        [fm fileExistsAtPath:inputFilePath isDirectory:&inputFileIsDirectory];
+        if (inputFileIsDirectory) {
+            PrintLn(@"%lu. %@: is directory, skipping", (idx+1), obj);
+            return;             
+        }
 
         NSURL *inputFileURL = [NSURL fileURLWithPath:inputFilePath isDirectory:NO];
         CIImage *inputImage = [CIImage imageWithContentsOfURL:inputFileURL];
