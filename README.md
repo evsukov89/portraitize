@@ -5,16 +5,21 @@ Powered by `CIFaceFeature` from `CoreImage.framework`, this tool will batch scan
 ## Usage
 
 ```bash
-./portraitize <input-dir> <output-dir>
+./portraitize -i <input-dir> -o <output-dir>
 ```
 
 For every image in `<input-dir>` `portraitize` will scan for faces, if present – it will extract that part of an image, crop/resize and save with the same filename.
 
+Additional parameters:
+
+* `-s --size [120x120]` - maximum output image size. Cropped face will be scaled to fit this size
+* `-m --multiplicator [40x70]` – how the recognized face rect should be increased by the % of the width/height.
+* `-v --version` – print version
+* `-h --help` – print help
+
 ## Issues
 
 * since result filename is exactly the same as source filename, if photo has multiple faces `portraitize` will essentially only save the latest recognized face
-* output file size can only be changed in source code
-* face size adjustment can only be changed in source code. This feature is required because `CIFaceDetector` only returns the face boundaries, but usually you also need to capture some space around for hair and shirt/jacket.
 * all images saved as `jpeg`s, no matter of file extension.
 
 ## Compilaion

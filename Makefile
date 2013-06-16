@@ -1,11 +1,11 @@
 CC=clang
-CFLAGS=-lobjc -framework Foundation -framework QuartzCore -framework AppKit -g
+CFLAGS=-std=c99 -fobjc-arc -lobjc -framework Foundation -framework QuartzCore -framework AppKit -g
 EXECUTABLE=portraitize
-SOURCES=portraitize.m
+SOURCES=src/*.m
 
 compile: $(SOURCES)
 	mkdir -p build
-	$(CC) -o build/$(EXECUTABLE) $(SOURCES) $(CFLAGS)
+	$(CC) $(CFLAGS) -o build/$(EXECUTABLE) $(SOURCES)
 
 clean:
 	rm -rf build
