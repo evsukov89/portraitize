@@ -5,7 +5,7 @@
 #include <getopt.h>
 
 #pragma mark DEFINES
-#define APPVERSION @"0.2.0"
+#define APPVERSION @"0.2.1"
 
 #pragma mark helper function definitions
 static void PrintLn(NSString *format, ...) NS_FORMAT_FUNCTION(1,2);
@@ -24,8 +24,8 @@ int main(int argc, char **argv) {
     struct option long_options[] = {
        {"version",       no_argument,       NULL, 'v'},
        {"help",          no_argument,       NULL, 'h'},
-       {"input-dir",     required_argument, NULL, 'i'},
-       {"output-dir",    required_argument, NULL, 'o'},
+       {"input",         required_argument, NULL, 'i'},
+       {"output",        required_argument, NULL, 'o'},
        {"size",          optional_argument, NULL, 's'},
        {"multiplicator", optional_argument, NULL, 'm'},
        {NULL,            no_argument,       NULL,  0 }
@@ -42,10 +42,10 @@ int main(int argc, char **argv) {
                 exit(0);
                 break;
             case 'i':
-                inputDirPath = [[NSString alloc] initWithUTF8String:optarg];                
+                inputDirPath = [[[NSString alloc] initWithUTF8String:optarg] stringByStandardizingPath];
                 break;
             case 'o':
-                outputDirPath = [[NSString alloc] initWithUTF8String:optarg];                
+                outputDirPath = [[[NSString alloc] initWithUTF8String:optarg] stringByStandardizingPath];
                 break;
             case 's': {
                 NSString *sizeString = [[NSString alloc] initWithUTF8String:optarg];
