@@ -1,4 +1,4 @@
- # `portraitize` - OS X batch processing tool to extract portrait photos
+# `portraitize` - OS X batch processing tool to extract portrait photos
 
 Powered by `CIFaceFeature` from `CoreImage.framework`, this tool will batch scan input directory for images with faces and then extract those into output directory with specified image resolution.
 

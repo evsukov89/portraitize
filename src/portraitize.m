@@ -5,7 +5,7 @@
 #include <getopt.h>
 
 #pragma mark DEFINES
-#define APPVERSION @"0.3.0"
+#define APPVERSION @"0.4.0"
 
 #pragma mark helper function definitions
 static void PrintLn(NSString *format, ...) NS_FORMAT_FUNCTION(1,2);
