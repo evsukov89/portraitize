@@ -13,14 +13,14 @@ For every image in `<input-dir>` `portraitize` will scan for faces, if present �
 Additional parameters:
 
 * `-s --size [120x120]` - maximum output image size. Cropped face will be scaled to fit this size
-* `-m --multiplicator [40x70]` – how the recognized face rect should be increased by the % of the width/height.
+* `-m --multiplicator [40x70]` – how the recognized face rect should be increased by the % of the width/height
 * `-v --version` – print version
 * `-h --help` – print help
+* `-f --format` - output file format. Possible options are `tiff`, `bmp`, `gif`, `png`, `jpeg` (or `jpg`). Default - `jpeg`
 
 ## Issues
 
 * since result filename is exactly the same as source filename, if photo has multiple faces `portraitize` will essentially only save the latest recognized face
-* all images saved as `jpeg`s, no matter of file extension.
 
 ## Compilaion
 

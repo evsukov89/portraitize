@@ -20,6 +20,8 @@ int main(int argc, char **argv) {
     NSString *inputDirPath = nil, *outputDirPath = nil;
     NSSize faceImageSize = NSMakeSize(120, 120);
     NSSize faceRectMultiplicator = NSMakeSize(0.4, 0.7);
+    NSBitmapImageFileType fileFormat = NSJPEGFileType;
+    NSString *fileExtension = @"jpg";
 
     struct option long_options[] = {
        {"version",       no_argument,       NULL, 'v'},
@@ -28,10 +30,11 @@ int main(int argc, char **argv) {
        {"output",        required_argument, NULL, 'o'},
        {"size",          optional_argument, NULL, 's'},
        {"multiplicator", optional_argument, NULL, 'm'},
+       {"format",        optional_argument, NULL, 'f'},
        {NULL,            no_argument,       NULL,  0 }
     };
     int opt = 0, long_index = 0;
-    while ((opt = getopt_long(argc, argv, "vhi:o:s:m:",  long_options, &long_index )) != -1) {
+    while ((opt = getopt_long(argc, argv, "vhi:o:s:m:f:",  long_options, &long_index )) != -1) {
         switch( opt ) {
             case 'v':
                 PrintLn(@"%@", APPVERSION);
@@ -69,6 +72,26 @@ int main(int argc, char **argv) {
                 }
                 break;
             }
+            case 'f': {
+                NSString *formatString = [[NSString alloc] initWithUTF8String:optarg];
+
+                if ([formatString isEqual:@"tiff"]) {
+                    fileFormat = NSTIFFFileType;
+                    fileExtension = @"tiff";
+                } else if ([formatString isEqual:@"bmp"]) {
+                    fileFormat = NSBMPFileType;
+                    fileExtension = @"bmp";
+                } else if ([formatString isEqual:@"gif"]) {
+                    fileFormat = NSGIFFileType;
+                    fileExtension = @"gif";
+                } else if ([formatString isEqual:@"jpeg"] || [formatString isEqual:@"jpg"]) {
+                    fileFormat = NSJPEGFileType;
+                    fileExtension = @"jpg";
+                } else if ([formatString isEqual:@"png"]) {
+                    fileFormat = NSPNGFileType;
+                    fileExtension = @"png";
+                }
+            }
         }
     }
 
@@ -81,8 +104,9 @@ int main(int argc, char **argv) {
         exit(1);
     }
 
-    PrintLn(@"processing: %@ -> %@, size: %@, multiplicator: %@", 
-        inputDirPath, outputDirPath, NSStringFromSize(faceImageSize), NSStringFromSize(faceRectMultiplicator));
+    PrintLn(@"processing: %@ -> %@, size: %@, multiplicator: %@, format: %@", 
+        inputDirPath, outputDirPath, NSStringFromSize(faceImageSize), 
+        NSStringFromSize(faceRectMultiplicator), fileExtension);
 
     NSFileManager *fm = [NSFileManager defaultManager];
     if (!CheckIfDirecoryExists(fm, inputDirPath)) {
@@ -140,8 +164,18 @@ int main(int argc, char **argv) {
             
             NSBitmapImageRep *croppedInputImageRep = [[NSBitmapImageRep alloc] initWithCIImage:resizedInputImage];
 
-            NSData *croppedInputImageData = [croppedInputImageRep representationUsingType:NSJPEGFileType properties:nil];
-            NSString *outFilePath = [outputDirPath stringByAppendingPathComponent:obj];
+            NSData *croppedInputImageData = [croppedInputImageRep representationUsingType:fileFormat properties:nil];
+
+            NSString *outFilename = obj;
+            {
+                NSArray *components = [obj componentsSeparatedByString:@"."];
+                if (components.count > 1) {
+                    NSArray *subarray = [components subarrayWithRange:NSMakeRange(0, components.count - 1)];
+                    outFilename = [@[ [subarray componentsJoinedByString:@"."], fileExtension] componentsJoinedByString:@"."];
+                }
+            }
+
+            NSString *outFilePath = [outputDirPath stringByAppendingPathComponent:outFilename];
 
             NSError *saveError = nil;
             BOOL saved = [croppedInputImageData writeToFile:outFilePath options:NSDataWritingAtomic error:&saveError];
