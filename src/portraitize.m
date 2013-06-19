@@ -169,10 +169,15 @@ int main(int argc, char **argv) {
             NSString *outFilename = obj;
             {
                 NSArray *components = [obj componentsSeparatedByString:@"."];
+                NSString *filename = obj;
                 if (components.count > 1) {
                     NSArray *subarray = [components subarrayWithRange:NSMakeRange(0, components.count - 1)];
-                    outFilename = [@[ [subarray componentsJoinedByString:@"."], fileExtension] componentsJoinedByString:@"."];
+                    filename = [subarray componentsJoinedByString:@"."];
                 }
+                if (detectedFeatures.count > 1) {
+                    filename = [filename stringByAppendingFormat:@"-%lu", (idx+1)];
+                }
+                outFilename = [filename stringByAppendingFormat:@".%@", fileExtension];
             }
 
             NSString *outFilePath = [outputDirPath stringByAppendingPathComponent:outFilename];
