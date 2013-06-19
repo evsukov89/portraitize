@@ -1,6 +1,8 @@
-# `portraitize` - OS X batch processing tool to extract portrait photos
+ # `portraitize` - OS X batch processing tool to extract portrait photos
 
 Powered by `CIFaceFeature` from `CoreImage.framework`, this tool will batch scan input directory for images with faces and then extract those into output directory with specified image resolution.
+
+![example screenshot](example/screenshot.png)
 
 ## Usage
 
@@ -18,9 +20,14 @@ Additional parameters:
 * `-h --help` – print help
 * `-f --format` - output file format. Possible options are `tiff`, `bmp`, `gif`, `png`, `jpeg` (or `jpg`). Default - `jpeg`
 
+## Todo
+
+* publish as homebrew package [on separate homebrew repo](https://github.com/mxcl/homebrew/wiki/brew-tap)
+* debug mode which will draw face rectangle on output photos
+
 ## Issues
 
-* since result filename is exactly the same as source filename, if photo has multiple faces `portraitize` will essentially only save the latest recognized face
+* algorithm for resizing output image needs to improved
 
 ## Compilaion
 
