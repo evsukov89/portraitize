@@ -72,6 +72,15 @@ int main(int argc, char **argv) {
         }
     }
 
+    if (!inputDirPath) {
+        PrintLn(@"ERROR: missing input dir parameter");
+        exit(1);
+    }
+    if (!outputDirPath) {
+        PrintLn(@"ERROR: missing output dir parameter");
+        exit(1);
+    }
+
     PrintLn(@"processing: %@ -> %@, size: %@, multiplicator: %@", 
         inputDirPath, outputDirPath, NSStringFromSize(faceImageSize), NSStringFromSize(faceRectMultiplicator));
 
