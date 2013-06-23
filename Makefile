@@ -20,9 +20,9 @@ debug: compile
 all: compile
 
 s3: compile
-	cd build; cp $(EXECUTABLE) $(EXECUTABLE)_$(VERSION); \
-	s3cmd put --acl-public $(EXECUTABLE)_$(VERSION) $(S3BUCKET); \
-	rm $(EXECUTABLE)_$(VERSION); \
+	cd build; zip $(EXECUTABLE)_$(VERSION).zip $(EXECUTABLE); \
+	s3cmd put --acl-public $(EXECUTABLE)_$(VERSION).zip $(S3BUCKET); \
+	rm $(EXECUTABLE)_$(VERSION).zip; \
 	zip -9 -y -r $(EXECUTABLE)_$(VERSION).dSYM.zip $(EXECUTABLE).dSYM; \
 	s3cmd put --acl-public $(EXECUTABLE)_$(VERSION).dSYM.zip $(S3BUCKET); \
 	rm $(EXECUTABLE)_$(VERSION).dSYM.zip;
