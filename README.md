@@ -4,6 +4,20 @@ Powered by `CIFaceFeature` from `CoreImage.framework`, this tool will batch scan
 
 ![example screenshot](example/screenshot.png)
 
+## Install
+
+```bash
+brew tap evsukov89/formulas
+brew install portraitize
+```
+
+## Update
+
+```bash
+brew update
+brew upgrade portraitize
+```
+
 ## Usage
 
 ```bash
@@ -22,8 +36,8 @@ Additional parameters:
 
 ## Todo
 
-* publish as homebrew package [on separate homebrew repo](https://github.com/mxcl/homebrew/wiki/brew-tap)
 * debug mode which will draw face rectangle on output photos
+* more useful help
 
 ## Issues
 
